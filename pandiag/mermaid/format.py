@@ -32,3 +32,10 @@ def _format_graph(graph: Graph) -> list[str]:
 
 def format(graph: Graph) -> str:
     return '\n'.join(_format_graph(graph))
+
+def format_markdown(graph: Graph) -> str:
+    return '\n'.join([
+        '```mermaid',
+        format(graph),
+        '```',
+    ])

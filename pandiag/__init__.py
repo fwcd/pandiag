@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Optional
 
-from pandiag import dot, drawio, markdown, mermaid
+from pandiag import dot, drawio, mermaid
 from pandiag.model.graph import Graph
 
 @dataclass
@@ -17,7 +17,7 @@ class Format:
 FORMATS = {
     'dot': Format(extensions=['dot'], format=dot.format),
     'drawio': Format(extensions=['drawio'], parse=drawio.parse),
-    'markdown': Format(extensions=['md', 'markdown'], format=markdown.format),
+    'markdown': Format(extensions=['md', 'markdown'], format=mermaid.format_markdown),
     'mermaid': Format(extensions=[], format=mermaid.format),
 }
 

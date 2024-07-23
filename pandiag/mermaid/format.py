@@ -15,8 +15,14 @@ def _format_edge(edge: Edge, graph: Graph) -> str:
     return f"{_format_node(edge.source)} {'-->' if graph.directed else '---'} {_format_node(edge.dest)}"
 
 def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
-    # TODO: Subgraphs
-    return [_format_edge(e, graph=graph) for e in subgraph.edges]
+    return [
+        *(_format_edge(e, graph=graph) for e in subgraph.edges),
+        *(l for g in subgraph.subgraphs for l in [
+            f'subgraph {_format_node(g.name)}',
+            *indent(_format_subgraph(g, graph)),
+            'end',
+        ]),
+    ]
 
 def _format_graph(graph: Graph) -> list[str]:
     return [

@@ -26,6 +26,13 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
     for cell in cells:
         label = _strip_html(cell.element.get('value')) if 'value' in cell.element.attrib else None
 
+        style = {
+            kv[0]: kv[1] if len(kv) > 1 else None
+            for raw in cell.element.get('style').split(';')
+            for kv in [raw.split('=')]
+            if raw
+        } if 'style' in cell.element.attrib else None
+
         if cell.element.attrib.get('edge') == '1':
             source = cells_by_id[cell.element.attrib['source']] if 'source' in cell.element.attrib else None
             target = cells_by_id[cell.element.attrib['target']] if 'target' in cell.element.attrib else None

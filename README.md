@@ -4,6 +4,6 @@
 
 A tool for converting between different diagram formats, including
 
-- DOT (GraphViz) (WIP)
-- Mermaid (WIP)
-- Drawio (WIP)
+- Drawio (input only)
+- DOT/GraphViz (output only)
+- Mermaid (output only)

@@ -15,7 +15,7 @@ class _Cell:
 
 def _strip_html(raw: str) -> str:
     # TODO: Be cleverer about this, perhaps use a proper HTML parser
-    raw = raw.replace('<br>', ' ')
+    raw = raw.replace('<br>', '\n')
     raw = re.sub(f'<[^>]+>', '', raw)
     return raw
 

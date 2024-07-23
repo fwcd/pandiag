@@ -5,7 +5,7 @@ from pandiag.utils import indent
 import subprocess
 
 def _format_label(label: Optional[str]) -> str:
-    return f'"{label.strip()}"' if label else None
+    return f'"{label.replace('\n', '\\n').strip()}"' if label else None
 
 def _format_node(node: Node) -> str:
     return f'{_format_label(node.label)};'

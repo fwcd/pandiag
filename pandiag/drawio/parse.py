@@ -47,7 +47,7 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
     
     return subgraph
 
-def _parse_graph(element: ET.Element) -> Graph:
+def _parse_mxgraphmodel(element: ET.Element) -> Graph:
     cells_by_id = {cell.attrib['id']: _Cell(cell) for cell in element.findall('.//mxCell')}
     root_cells: list[_Cell] = []
 
@@ -66,12 +66,13 @@ def _parse_graph(element: ET.Element) -> Graph:
         ),
     )
 
-def parse(raw: str) -> Graph:
-    root_element = ET.fromstring(raw)
+def _parse_diagram(element: ET.Element) -> Graph:
+    compressed = base64.b64decode(element.text)
+    decompressed = zlib.decompress(compressed, wbits=-15)
+    xml = urllib.parse.unquote(decompressed)
+    element = ET.fromstring(xml)
+    return _parse_mxgraphmodel(element)
 
-    graph_compressed = base64.b64decode(root_element.find('diagram[@name="New"]').text)
-    graph_decompressed = zlib.decompress(graph_compressed, wbits=-15)
-    graph_xml = urllib.parse.unquote(graph_decompressed)
-    graph_element = ET.fromstring(graph_xml)
-
-    return _parse_graph(graph_element)
+def parse(raw: str) -> list[Graph]:
+    element = ET.fromstring(raw)
+    return [_parse_diagram(e) for e in element.findall('diagram')]

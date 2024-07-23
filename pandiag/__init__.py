@@ -7,12 +7,15 @@ from typing import Callable, Optional
 
 from pandiag import dot, drawio, mermaid
 from pandiag.model.graph import Graph
+from pandiag.utils import help_escape
+
+PLACEHOLDER = '%'
 
 @dataclass
 class Format:
     extensions: list[str] = field(default_factory=list)
     format: Optional[Callable[[Graph], str | bytes]] = None
-    parse: Optional[Callable[[str], Graph]] = None
+    parse: Optional[Callable[[str], list[Graph]]] = None
 
 FORMATS = {
     'dot': Format(extensions=['dot'], format=dot.format),
@@ -29,17 +32,19 @@ def guess_format(path: Path) -> Optional[Format]:
 
 def main():
     parser = argparse.ArgumentParser(description='Utility for converting between diagram formats')
-    parser.add_argument('-o', '--output', type=Path, required=True, metavar='PATH', help='The path to the output document')
-    parser.add_argument('input', type=Path, help='The path to the input document')
+    parser.add_argument('-o', '--output', type=Path, required=True, metavar='PATH', help=f'The path to the output document. The file name must contain a {help_escape(PLACEHOLDER)} placeholder if the input document contains multiple graphs.')
+    parser.add_argument('input', type=Path, help='The path to the input document.')
 
     args = parser.parse_args()
+    input_path: Path = args.input
+    output_template: Path = args.output
     
-    if not (input_format := guess_format(args.input)):
-        print(f'Unrecognized input format: {args.input.name}')
+    if not (input_format := guess_format(input_path)):
+        print(f'Unrecognized input format: {input_path.name}')
         sys.exit(1)
     
-    if not (output_format := guess_format(args.output)):
-        print(f'Unrecognized output format: {args.output.name}')
+    if not (output_format := guess_format(output_template)):
+        print(f'Unrecognized output format: {output_template.name}')
         sys.exit(1)
 
     if not input_format.parse:
@@ -50,11 +55,27 @@ def main():
         print('Output format does not support formatting')
         sys.exit(1)
 
-    with open(args.input, 'r') as f:
+    with open(input_path, 'r') as f:
         raw_input = f.read()
 
-    graph = input_format.parse(raw_input)
-    raw_output = output_format.format(graph)
+    graphs = input_format.parse(raw_input)
 
-    with open(args.output, 'w' if isinstance(raw_output, str) else 'wb') as f:
-        f.write(raw_output)
+    if len(graphs) == 0:
+        print('Input contains no graphs')
+        sys.exit(1)
+
+    if len(graphs) > 1 and (PLACEHOLDER not in output_template.stem):
+        print(f'Output file name must contain a placeholder {PLACEHOLDER} since the input contains multiple ({len(graphs)}) graphs')
+        sys.exit(1)
+
+    for i, graph in enumerate(graphs):
+        raw_output = output_format.format(graph)
+        is_binary = isinstance(raw_output, bytes)
+
+        if len(graphs) > 1:
+            output_path = output_template.with_stem(output_template.stem.replace(PLACEHOLDER, f'{i:02d}'))
+        else:
+            output_path = output_template
+
+        with open(output_path, 'wb' if is_binary else 'w') as f:
+            f.write(raw_output)

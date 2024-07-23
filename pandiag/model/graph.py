@@ -13,6 +13,10 @@ class Subgraph:
     edges: list[Edge] = field(default_factory=list)
     subgraphs: list[Subgraph] = field(default_factory=list)
 
+    def merge(self, other: Subgraph):
+        self.edges += other.edges
+        self.subgraphs += other.subgraphs
+
 @dataclass
 class Graph:
     directed: bool = False

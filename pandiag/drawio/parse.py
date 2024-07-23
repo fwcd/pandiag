@@ -42,9 +42,8 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
             if subsubgraph.name:
                 subgraph.subgraphs.append(subsubgraph)
             else:
-                # Merge the subsubgraph into the current one
-                subgraph.edges += subsubgraph.edges
-                subgraph.subgraphs += subsubgraph.subgraphs
+                # Flatten the structure if the subgraph has no name
+                subgraph.merge(subsubgraph)
     
     return subgraph
 

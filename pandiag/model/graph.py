@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class Edge:
@@ -8,10 +8,10 @@ class Edge:
 
 @dataclass
 class Subgraph:
-    edges: list[Edge]
-    subgraphs: list[Subgraph]
+    edges: list[Edge] = field(default_factory=list)
+    subgraphs: list[Subgraph] = field(default_factory=list)
 
 @dataclass
 class Graph:
-    directed: bool
-    rootgraph: Subgraph
+    directed: bool = False
+    rootgraph: Subgraph = field(default_factory=Subgraph)

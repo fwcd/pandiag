@@ -24,3 +24,5 @@ Converting a draw.io diagram to PDF (requires GraphViz to be installed):
 ```sh
 pandiag somediagram.drawio -o somediagram.pdf
 ```
+
+For examples on how to use pandiag as a library, check out the [examples](examples) directory.

@@ -10,3 +10,17 @@ A tool for converting between different diagram formats, including
 
 > [!IMPORTANT]
 > The tool is highly experimental and can currently only parse/represent/format a small subset of diagrams.
+
+## Example
+
+Converting a draw.io diagram to DOT:
+
+```sh
+pandiag somediagram.drawio -o somediagram.dot
+```
+
+Converting a draw.io diagram to PDF (requires GraphViz to be installed):
+
+```sh
+pandiag somediagram.drawio -o somediagram.pdf
+```

@@ -12,7 +12,7 @@ def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
     return [
         *(_format_edge(e, graph=graph) for e in subgraph.edges),
         *(l for g in subgraph.subgraphs for l in [
-            f'subgraph {_format_node(g.name)} {{',
+            f"subgraph {_format_node(f'cluster_{g.name}')} {{",
             *indent(_format_subgraph(g, graph)),
             '}',
         ]),

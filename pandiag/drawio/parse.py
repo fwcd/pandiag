@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from pandiag.model.graph import Edge, Graph, Subgraph
+from pandiag.model.graph import Edge, Graph, Node, Subgraph
 
 import base64
 import re
@@ -22,7 +22,7 @@ def _strip_html(raw: str) -> str:
 def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Subgraph:
     subgraph = Subgraph()
 
-    # TODO: Perhaps support nodes and ids so we don't have to write the full labels into each edge?
+    # TODO: Perhaps support ids so we don't have to write the full labels into each edge?
     for cell in cells:
         if cell.element.attrib.get('edge') == '1':
             source = cells_by_id[cell.element.attrib['source']] if 'source' in cell.element.attrib else None
@@ -32,8 +32,7 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
                 source=_strip_html(source.element.get('value')) if source else None,
                 dest=_strip_html(target.element.get('value')) if target else None,
             ))
-        
-        if len(cell.childs) > 0:
+        elif len(cell.childs) > 0:
             subsubgraph = _construct_subgraph(
                 cells=cell.childs,
                 cells_by_id=cells_by_id,
@@ -44,6 +43,8 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
             else:
                 # Flatten the structure if the subgraph has no name
                 subgraph.merge(subsubgraph)
+        else:
+            subgraph.nodes.append(Node(cell.element.get('value')))
     
     return subgraph
 

@@ -5,17 +5,20 @@ from pandiag.utils import indent
 import hashlib
 import re
 
+def _sanitize_label(label: str) -> str:
+    # TODO: Find a better way to sanitize the label
+    return re.sub(r'[()]', '', label.replace('\n', '<br/>')).strip() if label else None
+
 def _format_label(label: Optional[str]) -> str:
     # TODO: Generate more readable node names than SHA1 hashes
-    # TODO: Find a better way to sanitize the label
-    label = re.sub(r'[()]', '', label.replace('\n', '<br/>')).strip() if label else None
+    label = _sanitize_label(label)
     return f"{hashlib.sha1(label.encode()).hexdigest()}[{label}]" if label else 'None'
 
 def _format_node(node: Node) -> str:
     return _format_label(node.label)
 
 def _format_edge(edge: Edge, graph: Graph) -> str:
-    return f"{_format_label(edge.source)} {'-->' if graph.directed else '---'} {_format_label(edge.dest)}"
+    return f"{_format_label(edge.source)} {'-->' if graph.directed else '---'}{f'|{_sanitize_label(edge.label)}|' if edge.label else ''} {_format_label(edge.dest)}"
 
 def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
     return [

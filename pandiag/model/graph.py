@@ -9,6 +9,7 @@ class Edge:
 
 @dataclass
 class Subgraph:
+    name: str = ''
     edges: list[Edge] = field(default_factory=list)
     subgraphs: list[Subgraph] = field(default_factory=list)
 

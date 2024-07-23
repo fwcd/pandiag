@@ -11,7 +11,7 @@ A tool for converting between different diagram formats, including
 > [!IMPORTANT]
 > The tool is highly experimental and can currently only parse/represent/format a small subset of diagrams.
 
-## Example
+## Examples
 
 Converting a draw.io diagram to DOT:
 

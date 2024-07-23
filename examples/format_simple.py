@@ -1,13 +1,7 @@
-from pandiag import dot, markdown, mermaid
+from pandiag import FORMATS
 from pandiag.model import Graph, Subgraph, Edge
 
 import argparse
-
-FORMATTERS = {
-    'dot': dot.format,
-    'markdown': markdown.format,
-    'mermaid': mermaid.format,
-}
 
 GRAPH = Graph(
     directed=True,
@@ -23,15 +17,16 @@ GRAPH = Graph(
 def main():
     parser = argparse.ArgumentParser(description='Formats a simple graph')
     parser.add_argument('-o', '--output', help='The output file path')
-    parser.add_argument('-f', '--format', choices=sorted(FORMATTERS.keys()), default='dot')
+    parser.add_argument('-f', '--format', choices=sorted(FORMATS.keys()), default='dot')
 
     args = parser.parse_args()
-    s = FORMATTERS[args.format](GRAPH)
+    raw_output = FORMATS[args.format].format(GRAPH)
+
     if args.output and args.output != '-':
-        with open(args.output, 'w') as f:
-            f.write(s)
+        with open(args.output, 'w' if isinstance(raw_output, str) else 'wb') as f:
+            f.write(raw_output)
     else:
-        print(s)
+        print(raw_output)
 
 if __name__ == '__main__':
     main()

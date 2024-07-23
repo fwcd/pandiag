@@ -4,7 +4,7 @@
 
 A tool for converting between different diagram formats, including
 
-- Drawio (input only)
+- draw.io (input only)
 - DOT/GraphViz (output only)
 - Mermaid (output only)
 

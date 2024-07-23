@@ -3,7 +3,7 @@ from pandiag.model.graph import Edge, Graph, Subgraph
 from pandiag.utils import indent
 
 def _format_node(label: Optional[str]) -> str:
-    return f'"{label}"' if label else None
+    return f'"{label.strip()}"' if label else None
 
 def _format_edge(edge: Edge, graph: Graph) -> str:
     return f"{_format_node(edge.source)} {'->' if graph.directed else '--'} {_format_node(edge.dest)};"

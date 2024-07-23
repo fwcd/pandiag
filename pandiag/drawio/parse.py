@@ -24,6 +24,8 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
 
     # TODO: Perhaps support ids so we don't have to write the full labels into each edge?
     for cell in cells:
+        label = _strip_html(cell.element.get('value')) if 'value' in cell.element.attrib else None
+
         if cell.element.attrib.get('edge') == '1':
             source = cells_by_id[cell.element.attrib['source']] if 'source' in cell.element.attrib else None
             target = cells_by_id[cell.element.attrib['target']] if 'target' in cell.element.attrib else None
@@ -31,20 +33,22 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
             subgraph.edges.append(Edge(
                 source=_strip_html(source.element.get('value')) if source else None,
                 dest=_strip_html(target.element.get('value')) if target else None,
+                label=label,
             ))
-        elif len(cell.childs) > 0:
+        elif label:
+            subgraph.nodes.append(Node(label))
+
+        if len(cell.childs) > 0:
             subsubgraph = _construct_subgraph(
                 cells=cell.childs,
                 cells_by_id=cells_by_id,
             )
-            subsubgraph.name = cell.element.get('value')
+            subsubgraph.name = label
             if subsubgraph.name:
                 subgraph.subgraphs.append(subsubgraph)
             else:
                 # Flatten the structure if the subgraph has no name
                 subgraph.merge(subsubgraph)
-        else:
-            subgraph.nodes.append(Node(_strip_html(cell.element.get('value'))))
     
     return subgraph
 

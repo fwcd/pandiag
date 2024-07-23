@@ -8,12 +8,13 @@ class Node:
 
 @dataclass
 class Edge:
-    source: Optional[str]
-    dest: Optional[str]
+    source: Optional[str] = None
+    dest: Optional[str] = None
+    label: Optional[str] = None
 
 @dataclass
 class Subgraph:
-    name: str = ''
+    name: Optional[str] = None
     nodes: list[Node] = field(default_factory=list)
     edges: list[Edge] = field(default_factory=list)
     subgraphs: list[Subgraph] = field(default_factory=list)

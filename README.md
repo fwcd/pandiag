@@ -9,7 +9,7 @@ A tool for converting between different diagram formats, including
 - Mermaid (output only)
 
 > [!IMPORTANT]
-> The tool is highly experimental and can currently only parse/represent/format a small subset of diagrams.
+> The tool is highly experimental and can currently only parse/represent/format a small subset of diagrams in the aforementioned formats. More formats are planned.
 
 ## Examples
 

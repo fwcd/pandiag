@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pandiag"
 version = "0.1.0"
-description = "Diagram conversion tool"
+description = "CLI tool for converting between diagram formats"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }

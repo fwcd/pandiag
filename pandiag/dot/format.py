@@ -1,5 +1,5 @@
 from typing import Optional
-from pandiag.model.graph import Edge, Graph, Node, Subgraph
+from pandiag.model.graph import Edge, EdgeStyle, Graph, Node, Subgraph
 from pandiag.utils import indent
 
 import subprocess
@@ -18,6 +18,7 @@ def _format_props(edge: Edge) -> str:
             {'dir': 'none'} if not edge.source_arrow and not edge.dest_arrow else
             {} # forward is the default direction, so we omit it for brevity
         ),
+        **({'style': 'dashed'} if edge.style == EdgeStyle.DASHED else {}),
         **({'label': edge.label} if edge.label else {}),
     }
     return f"[{', '.join(f'{k}={v}' for k, v in props.items())}]" if props else ''

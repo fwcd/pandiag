@@ -1,10 +1,15 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Optional
 
 @dataclass
 class Node:
     label: str
+
+class EdgeStyle(Enum):
+    SOLID = 1
+    DASHED = 2
 
 @dataclass
 class Edge:
@@ -12,6 +17,7 @@ class Edge:
     dest: Optional[str] = None
     source_arrow: bool = False
     dest_arrow: bool = True
+    style: EdgeStyle = EdgeStyle.SOLID
     label: Optional[str] = None
 
 @dataclass

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from pandiag.model.graph import Edge, Graph, Node, Subgraph
+from pandiag.model.graph import Edge, EdgeStyle, Graph, Node, Subgraph
 
 import base64
 import re
@@ -42,6 +42,7 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
                 dest=_strip_html(target.element.get('value')) if target else None,
                 source_arrow=style['startArrow'] != 'none' if 'startArrow' in style else False,
                 dest_arrow=style['endArrow'] != 'none' if 'endArrow' in style else True,
+                style=EdgeStyle.DASHED if style.get('dashed') == '1' else EdgeStyle.SOLID,
                 label=label,
             ))
         elif label:

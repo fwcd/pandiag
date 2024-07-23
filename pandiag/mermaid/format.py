@@ -1,5 +1,5 @@
 from typing import Optional
-from pandiag.model.graph import Edge, Graph, Node, Subgraph
+from pandiag.model.graph import Edge, EdgeStyle, Graph, Node, Subgraph
 from pandiag.utils import indent
 
 import hashlib
@@ -19,7 +19,11 @@ def _format_node(node: Node) -> str:
 
 def _format_arrow(edge: Edge, graph: Graph) -> str:
     if graph.directed:
-        return f"{'<' if edge.source_arrow else '-'}-{'>' if edge.dest_arrow else '-'}"
+        match edge.style:
+            case EdgeStyle.DASHED:
+                return f"{'<-' if edge.source_arrow else '-'}.{'->' if edge.dest_arrow else '-'}"
+            case EdgeStyle.SOLID:
+                return f"{'<' if edge.source_arrow else '-'}-{'>' if edge.dest_arrow else '-'}"
     else:
         return '---'
 

@@ -1,10 +1,11 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+from typing import Optional
 
 @dataclass
 class Edge:
-    source: str
-    dest: str
+    source: Optional[str]
+    dest: Optional[str]
 
 @dataclass
 class Subgraph:

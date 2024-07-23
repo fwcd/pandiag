@@ -1,8 +1,18 @@
+from typing import Optional
 from pandiag.model.graph import Edge, Graph, Subgraph
 from pandiag.utils import indent
 
+import hashlib
+import re
+
+def _format_node(label: Optional[str]) -> str:
+    # TODO: Generate more readable node names than SHA1 hashes
+    # TODO: Find a better way to sanitize the label
+    label = re.sub(r'[()]', '', label).strip() if label else None
+    return f"{hashlib.sha1(label.encode()).hexdigest()}[{label}]" if label else 'None'
+
 def _format_edge(edge: Edge, graph: Graph) -> str:
-    return f"{edge.source} {'-->' if graph.directed else '---'} {edge.dest}"
+    return f"{_format_node(edge.source)} {'-->' if graph.directed else '---'} {_format_node(edge.dest)}"
 
 def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
     # TODO: Subgraphs

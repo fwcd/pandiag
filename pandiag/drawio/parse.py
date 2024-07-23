@@ -13,7 +13,7 @@ def _strip_html(raw: str) -> str:
     return raw
 
 def _parse_graph(element: ET.Element) -> Graph:
-    graph = Graph()
+    graph = Graph(directed=True)
     cells = {cell.attrib['id']: cell for cell in element.findall('.//mxCell')}
 
     # TODO: Perhaps support nodes and ids so we don't have to write the full labels into each edge?

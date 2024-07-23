@@ -44,7 +44,7 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
                 # Flatten the structure if the subgraph has no name
                 subgraph.merge(subsubgraph)
         else:
-            subgraph.nodes.append(Node(cell.element.get('value')))
+            subgraph.nodes.append(Node(_strip_html(cell.element.get('value'))))
     
     return subgraph
 

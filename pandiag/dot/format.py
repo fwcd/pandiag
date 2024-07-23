@@ -1,22 +1,26 @@
 from typing import Optional
-from pandiag.model.graph import Edge, Graph, Subgraph
+from pandiag.model.graph import Edge, Graph, Node, Subgraph
 from pandiag.utils import indent
 
 import subprocess
 
-def _format_node(label: Optional[str]) -> str:
+def _format_label(label: Optional[str]) -> str:
     return f'"{label.strip()}"' if label else None
 
+def _format_node(node: Node) -> str:
+    return f'{_format_label(node.label)};'
+
 def _format_edge(edge: Edge, graph: Graph) -> str:
-    return f"{_format_node(edge.source)} {'->' if graph.directed else '--'} {_format_node(edge.dest)};"
+    return f"{_format_label(edge.source)} {'->' if graph.directed else '--'} {_format_label(edge.dest)};"
 
 def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
     return [
+        *(_format_node(n) for n in subgraph.nodes),
         *(_format_edge(e, graph=graph) for e in subgraph.edges),
         *(l for g in subgraph.subgraphs for l in [
-            f"subgraph {_format_node(f'cluster_{g.name}')} {{",
+            f"subgraph {_format_label(f'cluster_{g.name}')} {{",
             *indent([
-                *([f'label = {_format_node(g.name)};'] if g.name else ''),
+                *([f'label = {_format_label(g.name)};'] if g.name else ''),
                 *_format_subgraph(g, graph),
             ]),
             '}',
@@ -25,7 +29,7 @@ def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
 
 def _format_graph(graph: Graph) -> list[str]:
     return [
-        f"{'digraph' if graph.directed else 'graph'} {_format_node(graph.rootgraph.name)} {{",
+        f"{'digraph' if graph.directed else 'graph'} {_format_label(graph.rootgraph.name)} {{",
         *indent(_format_subgraph(graph.rootgraph, graph=graph)),
         '}',
     ]

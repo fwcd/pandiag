@@ -10,6 +10,8 @@ class Node:
 class Edge:
     source: Optional[str] = None
     dest: Optional[str] = None
+    source_arrow: bool = False
+    dest_arrow: bool = True
     label: Optional[str] = None
 
 @dataclass

@@ -17,8 +17,14 @@ def _format_label(label: Optional[str]) -> str:
 def _format_node(node: Node) -> str:
     return _format_label(node.label)
 
+def _format_arrow(edge: Edge, graph: Graph) -> str:
+    if graph.directed:
+        return f"{'<' if edge.source_arrow else '-'}-{'>' if edge.dest_arrow else '-'}"
+    else:
+        return '---'
+
 def _format_edge(edge: Edge, graph: Graph) -> str:
-    return f"{_format_label(edge.source)} {'-->' if graph.directed else '---'}{f'|{_sanitize_label(edge.label)}|' if edge.label else ''} {_format_label(edge.dest)}"
+    return f"{_format_label(edge.source)} {_format_arrow(edge, graph=graph)}{f'|{_sanitize_label(edge.label)}|' if edge.label else ''} {_format_label(edge.dest)}"
 
 def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
     return [

@@ -40,6 +40,8 @@ def _construct_subgraph(cells: list[_Cell], cells_by_id: dict[str, _Cell]) -> Su
             subgraph.edges.append(Edge(
                 source=_strip_html(source.element.get('value')) if source else None,
                 dest=_strip_html(target.element.get('value')) if target else None,
+                source_arrow=style['startArrow'] != 'none' if 'startArrow' in style else False,
+                dest_arrow=style['endArrow'] != 'none' if 'endArrow' in style else True,
                 label=label,
             ))
         elif label:

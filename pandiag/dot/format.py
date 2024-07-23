@@ -10,8 +10,23 @@ def _format_label(label: Optional[str]) -> str:
 def _format_node(node: Node) -> str:
     return f'{_format_label(node.label)};'
 
+def _format_props(edge: Edge) -> str:
+    props = {
+        **(
+            {'dir': 'both'} if edge.source_arrow and edge.dest_arrow else
+            {'dir': 'back'} if edge.source_arrow and not edge.dest_arrow else
+            {'dir': 'none'} if not edge.source_arrow and not edge.dest_arrow else
+            {} # forward is the default direction, so we omit it for brevity
+        ),
+        **({'label': edge.label} if edge.label else {}),
+    }
+    return f"[{', '.join(f'{k}={v}' for k, v in props.items())}]" if props else ''
+
+def _format_arrow(edge: Edge, graph: Graph) -> str:
+    return '->' if graph.directed else '--'
+
 def _format_edge(edge: Edge, graph: Graph) -> str:
-    return f"{_format_label(edge.source)} {'->' if graph.directed else '--'} {_format_label(edge.dest)};"
+    return f"{_format_label(edge.source)} {_format_arrow(edge, graph=graph)} {_format_label(edge.dest)} {_format_props(edge)};"
 
 def _format_subgraph(subgraph: Subgraph, graph: Graph) -> list[str]:
     return [

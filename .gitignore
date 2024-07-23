@@ -1,0 +1,8 @@
+.DS_Store
+.vscode
+__pycache__
+build
+*.egg-info
+*.pyc
+dist
+venv

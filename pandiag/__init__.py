@@ -11,7 +11,7 @@ from pandiag.model.graph import Graph
 @dataclass
 class Format:
     extensions: list[str] = field(default_factory=list)
-    format: Optional[Callable[[Graph], str]] = None
+    format: Optional[Callable[[Graph], str | bytes]] = None
     parse: Optional[Callable[[str], Graph]] = None
 
 FORMATS = {
@@ -19,6 +19,8 @@ FORMATS = {
     'drawio': Format(extensions=['drawio'], parse=drawio.parse),
     'markdown': Format(extensions=['md', 'markdown'], format=mermaid.format_markdown),
     'mermaid': Format(extensions=[], format=mermaid.format),
+    'pdf': Format(extensions=['pdf'], format=dot.format_pdf),
+    'png': Format(extensions=['png'], format=dot.format_png),
 }
 
 def guess_format(path: Path) -> Optional[Format]:
@@ -54,5 +56,5 @@ def main():
     graph = input_format.parse(raw_input)
     raw_output = output_format.format(graph)
 
-    with open(args.output, 'w') as f:
+    with open(args.output, 'w' if isinstance(raw_output, str) else 'wb') as f:
         f.write(raw_output)

@@ -2,6 +2,8 @@ from typing import Optional
 from pandiag.model.graph import Edge, Graph, Subgraph
 from pandiag.utils import indent
 
+import subprocess
+
 def _format_node(label: Optional[str]) -> str:
     return f'"{label.strip()}"' if label else None
 
@@ -30,3 +32,17 @@ def _format_graph(graph: Graph) -> list[str]:
 
 def format(graph: Graph) -> str:
     return '\n'.join(_format_graph(graph))
+
+def format_rendered(graph: Graph, render_format: str) -> bytes:
+    result = subprocess.run(
+        ['dot', '-T', render_format],
+        input=format(graph).encode(),
+        capture_output=True
+    )
+    return result.stdout
+
+def format_png(graph: Graph) -> bytes:
+    return format_rendered(graph, 'png')
+
+def format_pdf(graph: Graph) -> bytes:
+    return format_rendered(graph, 'pdf')

@@ -6,4 +6,5 @@ build
 *.pyc
 dist
 venv
+.venv
 local
